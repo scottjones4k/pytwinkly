@@ -10,11 +10,13 @@ class TwinklyClient:
         self.verifyUrl = "{}verify".format(self.baseUrl)
         self.modeUrl = "{}led/mode".format(self.baseUrl)
         self.deviceUrl = "{}gestalt".format(self.baseUrl)
+        self.brightneessUrl = "{}led/out/brightness".format(self.baseUrl)
 
         # populated after first request
         self.challenge = None
         self.challenge_response = None
         self.authentication_token = None
+        self.headers = None
     
     def generate_challenge(self):
         """
@@ -77,6 +79,26 @@ class TwinklyClient:
             json_payload = {"mode": mode}
             response = await session.post(self.modeUrl, json=json_payload, headers=self.headers)
             return await response.json()
+
+    async def get_brightness(self):       
+        async with aiohttp.ClientSession() as session:
+            response = await session.get(self.brightnessUrl, headers=self.headers)
+            result = await response.json()
+            if result[u"mode"] == "disabled":
+                return 100
+            return int(result[u"value"])
+
+    async def set_brightness(self, brightness):
+        async with aiohttp.ClientSession() as session:
+            assert brightness <= 100
+            assert brightness >= 0
+            if brightness < 100:
+                json_payload = {"mode": "enabled", "type": "A", "value": str(brightness)}
+            else:
+                json_payload = {"mode": "disabled", "type": "A"}
+            response = await session.post(self.brightnessUrl, json=json_payload, headers=self.headers)
+            result = await response.json()
+            return result[u"code"] == 1000
 
     async def turn_on(self):
         result = await self.set_mode("movie")

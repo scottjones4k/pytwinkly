@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pytwinkly",
-    version="0.1.3",
+    version="0.1.4",
     author="Scott Jones",
     author_email="scott.jones4k@gmail.com",
     description="A package for integrating with twinkly lights",
