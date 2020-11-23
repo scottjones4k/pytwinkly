@@ -10,7 +10,7 @@ class TwinklyClient:
         self.verifyUrl = "{}verify".format(self.baseUrl)
         self.modeUrl = "{}led/mode".format(self.baseUrl)
         self.deviceUrl = "{}gestalt".format(self.baseUrl)
-        self.brightneessUrl = "{}led/out/brightness".format(self.baseUrl)
+        self.brightnessUrl = "{}led/out/brightness".format(self.baseUrl)
 
         # populated after first request
         self.challenge = None
